@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint --yes)",
+      "Bash(npx create-next-app@latest threemonkids --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint --yes)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(ls /c/Users/61478/ThreeMonkids/threemonkids/.env*)",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\('next:', p.dependencies.next, 'zod:', p.dependencies.zod, 'react:', p.dependencies.react\\)\")",
+      "Bash(node -e \"const z = require\\('zod'\\); console.log\\('zod version:', z.z?.version ?? 'check package'\\); const {name, version} = require\\('./node_modules/zod/package.json'\\); console.log\\(name, version\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

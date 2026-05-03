@@ -94,14 +94,14 @@ body {
   border-right: 2px solid currentColor;
 }
 
-.already-me-image-area:hover ~ * .already-me-typing {
+.already-me-image-area:hover .already-me-typing {
   animation:
     alreadyMeTyping 1.4s steps(19, end) forwards,
     alreadyMeCaret 0.7s step-end infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .already-me-image-area:hover ~ * .already-me-typing {
+  .already-me-image-area:hover .already-me-typing {
     animation: none;
     width: 19ch;
   }

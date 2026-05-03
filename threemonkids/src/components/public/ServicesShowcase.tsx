@@ -50,22 +50,36 @@ function ServiceRow({ service }: { service: ServiceItem }) {
               hover:[filter:drop-shadow(0_48px_80px_rgba(0,0,0,0.85))]
             "
           >
-            {service.cardSrc ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={service.cardSrc}
-                alt={service.name}
-                width={service.cardWidth}
-                height={service.cardHeight}
-                className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
-              />
-            ) : (
-              <div className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] aspect-[315/439] rounded-2xl bg-[var(--color-surface-raised)] border border-[var(--color-border-light)] flex items-center justify-center select-none">
-                <span className="text-3xl md:text-4xl font-bold text-[var(--color-border-light)] tracking-tighter">
-                  {service.name.slice(0, 2).toUpperCase()}
+            <div className="relative inline-block">
+              {service.cardSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={service.cardSrc}
+                  alt={service.name}
+                  width={service.cardWidth}
+                  height={service.cardHeight}
+                  className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
+                />
+              ) : (
+                <div className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] aspect-[315/439] rounded-2xl bg-[var(--color-surface-raised)] border border-[var(--color-border-light)] flex items-center justify-center select-none">
+                  <span className="text-3xl md:text-4xl font-bold text-[var(--color-border-light)] tracking-tighter">
+                    {service.name.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+              )}
+
+              {/* Hover-revealed typing overlay — sits on top of the image,
+                  positioned just below where "Already Me" appears in the artwork.
+                  Adjust top/left to fine-tune against the image artwork. */}
+              {service.hoverTypingText && (
+                <span
+                  className="already-me-typing absolute italic font-serif text-sm md:text-base text-zinc-900 pointer-events-none"
+                  style={{ top: "32%", left: "14%" }}
+                >
+                  {service.hoverTypingText}
                 </span>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -80,23 +94,9 @@ function ServiceRow({ service }: { service: ServiceItem }) {
         </span>
 
         {/* Service name */}
-        <h2
-          className={[
-            "text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-foreground)]",
-            service.hoverTypingText ? "mb-2" : "mb-5",
-          ].join(" ")}
-        >
+        <h2 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-foreground)] mb-5">
           {service.name}
         </h2>
-
-        {/* Hover typing line — reserved height so layout doesn't shift */}
-        {service.hoverTypingText && (
-          <div className="h-6 md:h-7 mb-4 self-center md:self-start">
-            <span className="already-me-typing italic font-serif text-base md:text-lg text-[var(--color-muted)]">
-              {service.hoverTypingText}
-            </span>
-          </div>
-        )}
 
         {/* Main copy — full line highlighted with lime accent, square corners */}
         <p className="text-xl md:text-2xl font-bold leading-snug mb-4 self-center md:self-start">

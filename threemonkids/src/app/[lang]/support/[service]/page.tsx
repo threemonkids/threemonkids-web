@@ -25,17 +25,34 @@ export default async function SupportPage({ params }: Props) {
   const isKo = l === "ko";
   const serviceName = isKo ? found.name_ko : found.name_en;
 
+  // Per-service intro copy. Keep PerFact's wording untouched; add new services here.
+  const INTRO_BY_SLUG: Record<string, { ko: string; en: string }> = {
+    perfact: {
+      ko: "PerFact 서비스 관련 문의는 아래 이메일로 연락해주세요.",
+      en: "PerFact-related inquiries can be sent to the email below.",
+    },
+    "already-me": {
+      ko: "Already Me 서비스 관련 문의는 아래 이메일로 연락해주세요.",
+      en: "Already Me-related inquiries can be sent to the email below.",
+    },
+  };
+
+  // Per-service "Last updated" overrides. PerFact uses the default in StaticLegalLayout.
+  const UPDATED_DATE_BY_SLUG: Record<string, string> = {
+    "already-me": "03/05/2026",
+  };
+
+  const intro = INTRO_BY_SLUG[found.slug]?.[isKo ? "ko" : "en"];
+  const updatedDate = UPDATED_DATE_BY_SLUG[found.slug];
+
   return (
     <StaticLegalLayout
       lang={l}
       serviceSlug={found.slug}
       serviceName={serviceName}
       pageTitle={isKo ? "고객지원" : "Support"}
-      intro={
-        isKo
-          ? "PerFact 서비스 관련 문의는 아래 이메일로 연락해주세요."
-          : "PerFact-related inquiries can be sent to the email below."
-      }
+      intro={intro}
+      updatedDate={updatedDate}
       sections={
         isKo
           ? [

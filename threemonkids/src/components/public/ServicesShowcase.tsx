@@ -19,6 +19,8 @@ export type ServiceItem = {
   ctaInactive?: boolean;
   /** If set, this text reveals via a typing animation when the card image is hovered */
   hoverTypingText?: string;
+  /** If true, render the card image flat (no 3D rotate/perspective/tilt) */
+  staticCard?: boolean;
 };
 
 /* ─── Single service row ──────────────────────────────────────────────────── */
@@ -26,62 +28,83 @@ export type ServiceItem = {
 function ServiceRow({ service }: { service: ServiceItem }) {
   const supportLines = service.supportCopy.split("\n");
 
+  // Inner card content — image (or fallback) plus optional hover-typing overlay.
+  // Wrapped in `relative inline-block` so the absolute overlay positions against
+  // the image bounding box, not the column.
+  const cardInner = (
+    <div className="relative inline-block">
+      {service.cardSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={service.cardSrc}
+          alt={service.name}
+          width={service.cardWidth}
+          height={service.cardHeight}
+          className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
+        />
+      ) : (
+        <div className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] aspect-[315/439] rounded-2xl bg-[var(--color-surface-raised)] border border-[var(--color-border-light)] flex items-center justify-center select-none">
+          <span className="text-3xl md:text-4xl font-bold text-[var(--color-border-light)] tracking-tighter">
+            {service.name.slice(0, 2).toUpperCase()}
+          </span>
+        </div>
+      )}
+
+      {/* Hover-revealed typing overlay — sits over the image, anchored under
+          where "Already Me" appears in the artwork. The wrapper is 19ch wide
+          (final text width); translateX is dialled back from -50% to -42% so
+          the start of "From" sits ~2 characters to the right of the centered
+          position, aligning with the "o" in the artwork. Adjust `top` to align
+          vertically and the translateX % to nudge horizontally. */}
+      {service.hoverTypingText && (
+        <div
+          className="already-me-typing-font absolute pointer-events-none text-sm md:text-base"
+          style={{
+            top: "32%",
+            left: "50%",
+            transform: "translateX(-42%)",
+            width: "19ch",
+          }}
+        >
+          <span className="already-me-typing text-zinc-900">
+            {service.hoverTypingText}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 md:gap-0">
 
-      {/* ── Left ~45%: 3D card ────────────────────────────────────────────── */}
+      {/* ── Left ~45%: card ───────────────────────────────────────────────── */}
       <div
         className={[
           "md:w-[45%] shrink-0 flex items-center justify-center md:justify-end md:pr-12 lg:pr-16",
           service.hoverTypingText ? "already-me-image-area" : "",
         ].join(" ")}
       >
-        <div style={{ perspective: "900px", transform: "translateX(-32px)" }}>
-          {/*
-            Default: rotateY(-18deg) rotateX(6deg) — noticeable lean
-            Hover:   rotateY(-4deg)  rotateX(1deg) — turns toward viewer
-          */}
-          <div
-            className="
-              transition-[transform,filter] duration-[450ms] ease-out
-              [transform:rotateY(-22deg)_rotateX(8deg)]
-              [filter:drop-shadow(0_24px_52px_rgba(0,0,0,0.6))]
-              hover:[transform:rotateY(-4deg)_rotateX(2deg)]
-              hover:[filter:drop-shadow(0_48px_80px_rgba(0,0,0,0.85))]
-            "
-          >
-            <div className="relative inline-block">
-              {service.cardSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={service.cardSrc}
-                  alt={service.name}
-                  width={service.cardWidth}
-                  height={service.cardHeight}
-                  className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
-                />
-              ) : (
-                <div className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] aspect-[315/439] rounded-2xl bg-[var(--color-surface-raised)] border border-[var(--color-border-light)] flex items-center justify-center select-none">
-                  <span className="text-3xl md:text-4xl font-bold text-[var(--color-border-light)] tracking-tighter">
-                    {service.name.slice(0, 2).toUpperCase()}
-                  </span>
-                </div>
-              )}
-
-              {/* Hover-revealed typing overlay — sits on top of the image,
-                  positioned just below where "Already Me" appears in the artwork.
-                  Adjust top/left to fine-tune against the image artwork. */}
-              {service.hoverTypingText && (
-                <span
-                  className="already-me-typing absolute italic font-serif text-sm md:text-base text-zinc-900 pointer-events-none"
-                  style={{ top: "32%", left: "14%" }}
-                >
-                  {service.hoverTypingText}
-                </span>
-              )}
+        {service.staticCard ? (
+          // Static — flat diary photo, soft drop-shadow only, no rotate/perspective
+          <div className="[filter:drop-shadow(0_12px_28px_rgba(0,0,0,0.5))]">
+            {cardInner}
+          </div>
+        ) : (
+          // 3D card — perspective + leaning rotate, settles toward viewer on hover
+          <div style={{ perspective: "900px", transform: "translateX(-32px)" }}>
+            <div
+              className="
+                transition-[transform,filter] duration-[450ms] ease-out
+                [transform:rotateY(-22deg)_rotateX(8deg)]
+                [filter:drop-shadow(0_24px_52px_rgba(0,0,0,0.6))]
+                hover:[transform:rotateY(-4deg)_rotateX(2deg)]
+                hover:[filter:drop-shadow(0_48px_80px_rgba(0,0,0,0.85))]
+              "
+            >
+              {cardInner}
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* ── Right ~55%: text block ────────────────────────────────────────── */}
@@ -127,7 +150,7 @@ function ServiceRow({ service }: { service: ServiceItem }) {
             ) : (
               <span
                 aria-disabled="true"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent)]/60 cursor-default select-none"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent)] hover:opacity-75 transition-opacity cursor-default select-none"
               >
                 Learn more →
               </span>

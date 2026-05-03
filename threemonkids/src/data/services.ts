@@ -1,4 +1,4 @@
-export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity";
+export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity" | "diary";
 
 export type ServiceStatus = "live" | "coming_soon" | "archived" | "draft";
 
@@ -28,6 +28,23 @@ export type Service = {
 };
 
 export const SERVICES: Service[] = [
+  {
+    id: "already-me",
+    slug: "already-me",
+    name_ko: "Already Me",
+    name_en: "Already Me",
+    tagline_ko: "일기? 계획? 미래.",
+    tagline_en: "Diary? Plan? Future.",
+    description_ko:
+      "[오늘 있었던 일]을 적는 데서 끝나지 않습니다.\n되고 싶은 [나의 모습]을 [먼저 기록]합니다.\n[Already Me]는 [글]을 방향으로, 방향을 [현실]로 바꾸는 [미래 다이어리] 앱입니다.",
+    description_en:
+      "[Don't just write] what happened today.\nWrite the version of yourself [you want to become].\n[Already Me] is a [future diary] app that helps you turn [words] into direction, and direction into [reality].",
+    status: "coming_soon",
+    categories: ["ios", "app", "diary"],
+    cardSrc: "/services/Already_Me.png",
+    avatarSrc: "/services/on_monkey.png",
+    media: [],
+  },
   {
     id: "perfact",
     slug: "perfact",

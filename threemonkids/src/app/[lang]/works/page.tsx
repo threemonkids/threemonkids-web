@@ -198,9 +198,10 @@ const CATEGORY_LABELS: Record<ServiceCategory, string> = {
   news: "News",
   utility: "Utility",
   productivity: "Productivity",
+  diary: "Diary",
 };
 
-const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news"]);
+const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news", "diary"]);
 
 function CategoryTag({ category }: { category: ServiceCategory }) {
   const isWhite = WHITE_CATEGORIES.has(category);

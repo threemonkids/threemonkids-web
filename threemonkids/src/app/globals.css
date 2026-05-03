@@ -75,6 +75,20 @@ body {
 }
 
 /* ── Already Me — typing reveal triggered by hovering the image ─────────── */
+/* Drop the font file at /public/fonts/ComingSoon-Regular.ttf — if missing,
+   the browser silently falls back through the .already-me-typing-font stack. */
+@font-face {
+  font-family: "AlreadyMeHandwriting";
+  src: url("/fonts/ComingSoon-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.already-me-typing-font {
+  font-family: "AlreadyMeHandwriting", "Caveat", "Indie Flower", cursive, serif;
+}
+
 @keyframes alreadyMeTyping {
   from { width: 0; }
   to   { width: 19ch; }

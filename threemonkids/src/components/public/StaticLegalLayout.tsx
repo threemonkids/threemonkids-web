@@ -15,6 +15,8 @@ type Props = {
   sections: Section[];
   backHref: string;
   backLabel: string;
+  /** Override the displayed "Last updated" date for this page. Defaults to the project-wide date. */
+  updatedDate?: string;
 };
 
 const EMAIL = "threemonkids@gmail.com";
@@ -27,8 +29,8 @@ export default function StaticLegalLayout({
   sections,
   backHref,
   backLabel,
+  updatedDate = "2026.04.18",
 }: Props) {
-  const updatedDate = "2026.04.18";
 
   return (
     <div className="px-6 pt-14 pb-28 max-w-2xl mx-auto">

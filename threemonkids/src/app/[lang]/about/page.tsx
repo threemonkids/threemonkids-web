@@ -192,6 +192,14 @@ export default async function AboutPage({ params }: Props) {
                 <ul className="flex flex-col gap-1.5">
                   <li className="text-sm">
                     <Link
+                      href={`/${l}/works#already-me`}
+                      className="text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors duration-200"
+                    >
+                      Already Me
+                    </Link>
+                  </li>
+                  <li className="text-sm">
+                    <Link
                       href={`/${l}/works#perfact`}
                       className="text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors duration-200"
                     >

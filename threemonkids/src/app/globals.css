@@ -73,3 +73,36 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Already Me — typing reveal triggered by hovering the image ─────────── */
+@keyframes alreadyMeTyping {
+  from { width: 0; }
+  to   { width: 19ch; }
+}
+
+@keyframes alreadyMeCaret {
+  50% { border-color: transparent; }
+}
+
+.already-me-typing {
+  display: inline-block;
+  width: 0;
+  max-width: 19ch;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  border-right: 2px solid currentColor;
+}
+
+.already-me-image-area:hover ~ * .already-me-typing {
+  animation:
+    alreadyMeTyping 1.4s steps(19, end) forwards,
+    alreadyMeCaret 0.7s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .already-me-image-area:hover ~ * .already-me-typing {
+    animation: none;
+    width: 19ch;
+  }
+}

@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export type ServiceItem = {
   id: string;
-  cardSrc: string;
-  cardWidth: number;
-  cardHeight: number;
+  cardSrc?: string;
+  cardWidth?: number;
+  cardHeight?: number;
   name: string;
   statusLabel: string;
   /** Highlighted with lime accent block */
@@ -15,6 +15,10 @@ export type ServiceItem = {
   avatarAlt?: string;
   /** If set, a "Learn more" CTA links here */
   href?: string;
+  /** If true, render the "Learn more" CTA as visible but non-clickable */
+  ctaInactive?: boolean;
+  /** If set, this text reveals via a typing animation when the card image is hovered */
+  hoverTypingText?: string;
 };
 
 /* ─── Single service row ──────────────────────────────────────────────────── */
@@ -26,7 +30,12 @@ function ServiceRow({ service }: { service: ServiceItem }) {
     <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 md:gap-0">
 
       {/* ── Left ~45%: 3D card ────────────────────────────────────────────── */}
-      <div className="md:w-[45%] shrink-0 flex items-center justify-center md:justify-end md:pr-12 lg:pr-16">
+      <div
+        className={[
+          "md:w-[45%] shrink-0 flex items-center justify-center md:justify-end md:pr-12 lg:pr-16",
+          service.hoverTypingText ? "already-me-image-area" : "",
+        ].join(" ")}
+      >
         <div style={{ perspective: "900px", transform: "translateX(-32px)" }}>
           {/*
             Default: rotateY(-18deg) rotateX(6deg) — noticeable lean
@@ -41,14 +50,22 @@ function ServiceRow({ service }: { service: ServiceItem }) {
               hover:[filter:drop-shadow(0_48px_80px_rgba(0,0,0,0.85))]
             "
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={service.cardSrc}
-              alt={service.name}
-              width={service.cardWidth}
-              height={service.cardHeight}
-              className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
-            />
+            {service.cardSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={service.cardSrc}
+                alt={service.name}
+                width={service.cardWidth}
+                height={service.cardHeight}
+                className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] w-auto select-none"
+              />
+            ) : (
+              <div className="h-[260px] sm:h-[300px] md:h-[340px] lg:h-[380px] aspect-[315/439] rounded-2xl bg-[var(--color-surface-raised)] border border-[var(--color-border-light)] flex items-center justify-center select-none">
+                <span className="text-3xl md:text-4xl font-bold text-[var(--color-border-light)] tracking-tighter">
+                  {service.name.slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -63,9 +80,23 @@ function ServiceRow({ service }: { service: ServiceItem }) {
         </span>
 
         {/* Service name */}
-        <h2 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-foreground)] mb-5">
+        <h2
+          className={[
+            "text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-foreground)]",
+            service.hoverTypingText ? "mb-2" : "mb-5",
+          ].join(" ")}
+        >
           {service.name}
         </h2>
+
+        {/* Hover typing line — reserved height so layout doesn't shift */}
+        {service.hoverTypingText && (
+          <div className="h-6 md:h-7 mb-4 self-center md:self-start">
+            <span className="already-me-typing italic font-serif text-base md:text-lg text-[var(--color-muted)]">
+              {service.hoverTypingText}
+            </span>
+          </div>
+        )}
 
         {/* Main copy — full line highlighted with lime accent, square corners */}
         <p className="text-xl md:text-2xl font-bold leading-snug mb-4 self-center md:self-start">
@@ -78,20 +109,29 @@ function ServiceRow({ service }: { service: ServiceItem }) {
         <div className="flex flex-col gap-1 mb-8">
           {supportLines.map((line, i) => (
             <p key={i} className="text-base md:text-lg text-[var(--color-muted)] leading-relaxed">
-              {line}
+              {line || " "}
             </p>
           ))}
         </div>
 
         {/* Learn more CTA */}
-        {service.href && (
+        {(service.href || service.ctaInactive) && (
           <div className="flex justify-center md:justify-start mb-6">
-            <Link
-              href={service.href}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent)] hover:opacity-75 transition-opacity"
-            >
-              Learn more →
-            </Link>
+            {service.href ? (
+              <Link
+                href={service.href}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent)] hover:opacity-75 transition-opacity"
+              >
+                Learn more →
+              </Link>
+            ) : (
+              <span
+                aria-disabled="true"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent)]/60 cursor-default select-none"
+              >
+                Learn more →
+              </span>
+            )}
           </div>
         )}
 

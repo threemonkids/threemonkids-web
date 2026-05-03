@@ -44,6 +44,16 @@ export default async function HomePage({ params }: Props) {
         const services: ServiceItem[] = l === "ko"
           ? [
               {
+                id: "already-me",
+                cardSrc: "/services/already_me.png",
+                name: "Already Me",
+                statusLabel: "Coming Soon",
+                mainCopy: "일기? 계획? 미래.",
+                supportCopy: "오늘을 계획하지 않습니다.\n미래를 기록합니다.\n\n당신의 글이 현실이 됩니다.",
+                ctaInactive: true,
+                hoverTypingText: "From Future to Past",
+              },
+              {
                 id: "perfact",
                 cardSrc: "/services/perfact_card.png",
                 cardWidth: 315,
@@ -58,6 +68,16 @@ export default async function HomePage({ params }: Props) {
               },
             ]
           : [
+              {
+                id: "already-me",
+                cardSrc: "/services/already_me.png",
+                name: "Already Me",
+                statusLabel: "Coming Soon",
+                mainCopy: "Diary? Plan? Future.",
+                supportCopy: "Don't plan your day.\nWrite your future.\n\nYour words become reality.",
+                ctaInactive: true,
+                hoverTypingText: "From Future to Past",
+              },
               {
                 id: "perfact",
                 cardSrc: "/services/perfact_card.png",

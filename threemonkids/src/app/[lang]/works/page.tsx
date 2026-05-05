@@ -122,26 +122,38 @@ function ServiceSection({ service, lang }: { service: Service; lang: Lang }) {
         </div>
 
         {/* Links — mt-auto pins this to the bottom of the column = card baseline */}
-        <div className="mt-auto flex items-center gap-5 pt-3">
-          <DownloadButton lang={lang} />
-          <Link
-            href={`/${lang}/support/${service.slug}`}
-            className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
-          >
-            {lang === "ko" ? "고객지원" : "Support"}
-          </Link>
-          <Link
-            href={`/${lang}/privacy/${service.slug}`}
-            className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
-          >
-            {lang === "ko" ? "개인정보 처리방침" : "Privacy"}
-          </Link>
-          <Link
-            href={`/${lang}/terms/${service.slug}`}
-            className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
-          >
-            {lang === "ko" ? "이용약관" : "Terms of Use"}
-          </Link>
+        <div className="mt-auto pt-3">
+          <div className="flex items-center gap-5 flex-wrap">
+            <DownloadButton lang={lang} href={service.downloadUrl} />
+            <Link
+              href={`/${lang}/support/${service.slug}`}
+              className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
+            >
+              {lang === "ko" ? "고객지원" : "Support"}
+            </Link>
+            <Link
+              href={`/${lang}/privacy/${service.slug}`}
+              className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
+            >
+              {lang === "ko" ? "개인정보 처리방침" : "Privacy"}
+            </Link>
+            <Link
+              href={`/${lang}/terms/${service.slug}`}
+              className="text-xs font-medium text-[var(--color-foreground)]/60 hover:text-[var(--color-foreground)] transition-colors duration-150"
+            >
+              {lang === "ko" ? "이용약관" : "Terms of Use"}
+            </Link>
+          </div>
+
+          {/* QR code — desktop only, anchored below the Download button */}
+          {service.qrCodeSrc && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={service.qrCodeSrc}
+              alt={lang === "ko" ? "앱 다운로드 QR 코드" : "App download QR code"}
+              className="hidden md:block mt-3 w-20 h-20 rounded bg-white p-1"
+            />
+          )}
         </div>
       </div>
 
@@ -171,7 +183,7 @@ const STATUS_STYLES: Record<ServiceStatus, string> = {
 };
 
 const STATUS_LABELS: Record<ServiceStatus, string> = {
-  live: "Live",
+  live: "Open",
   coming_soon: "Coming Soon",
   archived: "Archived",
   draft: "Draft",

@@ -3,15 +3,48 @@
 import { useState, useEffect } from "react";
 import type { Lang } from "@/types/i18n";
 
-export function DownloadButton({ lang }: { lang: Lang }) {
+type Props = {
+  lang: Lang;
+  /** When set, the button becomes a real link to this URL (opens in new tab).
+   *  When omitted, clicking shows a "coming soon" toast. */
+  href?: string;
+};
+
+export function DownloadButton({ lang, href }: Props) {
   const label   = lang === "ko" ? "다운로드" : "Download";
   const message = lang === "ko" ? "앱 출시 준비 중입니다." : "App launching soon.";
 
-  const [visible, setVisible] = useState(false);
+  const linkClass =
+    "text-xs font-medium text-[var(--color-accent)]/70 hover:text-[var(--color-accent)] transition-colors duration-150 cursor-pointer";
 
-  function handleClick() {
-    setVisible(true);
+  // Active link mode — go to App Store / external URL
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkClass}
+      >
+        {label}
+      </a>
+    );
   }
+
+  // Coming-soon mode — toast on click, no navigation
+  return <ToastButton label={label} message={message} className={linkClass} />;
+}
+
+function ToastButton({
+  label,
+  message,
+  className,
+}: {
+  label: string;
+  message: string;
+  className: string;
+}) {
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -21,10 +54,7 @@ export function DownloadButton({ lang }: { lang: Lang }) {
 
   return (
     <>
-      <button
-        onClick={handleClick}
-        className="text-xs font-medium text-[var(--color-accent)]/70 hover:text-[var(--color-accent)] transition-colors duration-150 cursor-pointer"
-      >
+      <button onClick={() => setVisible(true)} className={className}>
         {label}
       </button>
 

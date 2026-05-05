@@ -21,6 +21,10 @@ export type ServiceItem = {
   hoverTypingText?: string;
   /** If true, render the card image flat (no 3D rotate/perspective/tilt) */
   staticCard?: boolean;
+  /** Visual treatment for the status badge dot.
+   *  "live"        → steady emerald dot (released)
+   *  "coming_soon" → pulsing amber dot (default) */
+  statusKind?: "live" | "coming_soon";
 };
 
 /* ─── Single service row ──────────────────────────────────────────────────── */
@@ -112,7 +116,14 @@ function ServiceRow({ service }: { service: ServiceItem }) {
 
         {/* Status badge */}
         <span className="inline-flex self-center md:self-start items-center gap-1.5 px-3 py-1 mb-5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-muted)] tracking-widest uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" aria-hidden />
+          <span
+            className={
+              service.statusKind === "live"
+                ? "w-1.5 h-1.5 rounded-full bg-emerald-400"
+                : "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"
+            }
+            aria-hidden
+          />
           {service.statusLabel}
         </span>
 

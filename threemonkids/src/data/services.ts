@@ -25,6 +25,10 @@ export type Service = {
   logoSrc?: string;
   avatarSrc?: string;
   media: ServiceMedia[];
+  /** External download URL (e.g. App Store). When set, the Download button links here in a new tab. */
+  downloadUrl?: string;
+  /** Path to a QR code image. Shown below the Download button on desktop only. */
+  qrCodeSrc?: string;
 };
 
 export const SERVICES: Service[] = [
@@ -39,10 +43,12 @@ export const SERVICES: Service[] = [
       "[오늘 있었던 일]을 적는 데서 끝나지 않습니다.\n되고 싶은 [나의 모습]을 [먼저 기록]합니다.\n[Already Me]는 [글]을 방향으로, 방향을 [현실]로 바꾸는 [미래 다이어리] 앱입니다.",
     description_en:
       "[Don't just write] what happened today.\nWrite the version of yourself [you want to become].\n[Already Me] is a [future diary] app that helps you turn [words] into direction, and direction into [reality].",
-    status: "coming_soon",
+    status: "live",
     categories: ["ios", "app", "diary"],
     cardSrc: "/services/Already_Me.png",
     avatarSrc: "/services/on_monkey.png",
+    downloadUrl: "https://apps.apple.com/au/app/already-me/id6766051614",
+    qrCodeSrc: "/services/already_me_qr.png",
     media: [],
   },
   {

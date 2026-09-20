@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Nanum_Myeongjo } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +10,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Used only by the Najeon service card. Korean webfonts are heavy, so this one is
+// never preloaded — the card falls back to a system 명조 stack until it arrives.
+const nanumMyeongjo = Nanum_Myeongjo({
+  variable: "--font-nanum-myeongjo",
+  weight: ["400", "700"],
+  // `subsets` is deliberately omitted: next/font's metadata for this family lists
+  // only "latin", and naming subsets would drop the hangul ranges. Omitting it
+  // (legal because preload is off) pulls every unicode-range the family ships.
+  preload: false,
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +46,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${nanumMyeongjo.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
       </body>

@@ -120,3 +120,86 @@ body {
     width: 19ch;
   }
 }
+
+/* ── Najeon — service card built as a component, not an image ───────────── */
+/* The card reproduces the app's 덧쓰기 moment: the dictionary definition recedes
+   and the user's own sentence is typed over it. Laid out at a fixed 315x439
+   design size and scaled into each slot via --najeon-scale, set by the call
+   site per breakpoint. Trigger is :hover on pointer devices; on touch,
+   NajeonCard adds .najeon-card--played once the card scrolls into view. */
+
+.najeon-card {
+  --najeon-scale: 1;
+  --najeon-paper:    #EEE6D3;
+  --najeon-ink:      #2A2622;
+  --najeon-ink-blue: #2F3E55;
+  --najeon-faded:    #A59C90;
+  --najeon-meta:     #8C8376;
+
+  width: calc(315px * var(--najeon-scale));
+  height: calc(439px * var(--najeon-scale));
+  flex: none;
+}
+
+.najeon-card-inner {
+  width: 315px;
+  height: 439px;
+  transform: scale(var(--najeon-scale));
+  transform-origin: top left;
+  background: var(--najeon-paper);
+  color: var(--najeon-ink);
+  font-family: var(--font-nanum-myeongjo), "Nanum Myeongjo", "AppleMyungjo",
+    "Batang", serif;
+  border-radius: 2px;
+}
+
+/* Dictionary definition — fades to grey and shrinks slightly, line by line */
+.najeon-def-line {
+  display: block;
+  color: var(--najeon-ink);
+  transform-origin: left center;
+  transition:
+    color 1800ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1800ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 120ms);
+}
+
+.najeon-card:hover .najeon-def-line,
+.najeon-card--played .najeon-def-line {
+  color: var(--najeon-faded);
+  transform: scale(0.96);
+}
+
+/* Own writing — each character appears 90ms after the one before it.
+   Characters keep their space while hidden, so nothing reflows.
+
+   This is a transition, not an animation, on purpose: the revealed sentence has
+   to stay put for as long as the card is hovered. An animation ends, and what it
+   leaves behind depends on fill-mode handling; a transition simply holds the
+   state its selector selects. The stagger lives on the hover rule, so typing in
+   is staggered while leaving clears every character at once. */
+.najeon-type {
+  white-space: pre-wrap;
+}
+
+.najeon-type-char {
+  opacity: 0;
+  transition: opacity 60ms linear;
+  transition-delay: 0ms;
+}
+
+.najeon-card:hover .najeon-type-char,
+.najeon-card--played .najeon-type-char {
+  opacity: 1;
+  transition-delay: calc(var(--i) * 90ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .najeon-def-line,
+  .najeon-type-char,
+  .najeon-card:hover .najeon-type-char,
+  .najeon-card--played .najeon-type-char {
+    transition-duration: 0.01ms;
+    transition-delay: 0ms;
+  }
+}

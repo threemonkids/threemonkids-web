@@ -1,8 +1,11 @@
 import Link from "next/link";
+import NajeonCard from "@/components/public/NajeonCard";
 
 export type ServiceItem = {
   id: string;
   cardSrc?: string;
+  /** Renders a live component instead of `cardSrc`. See NajeonCard / CLAUDE.md. */
+  cardKind?: "najeon";
   cardWidth?: number;
   cardHeight?: number;
   name: string;
@@ -35,7 +38,9 @@ function ServiceRow({ service }: { service: ServiceItem }) {
   // Inner card content — image (or fallback) plus optional hover-typing overlay.
   // Wrapped in `relative inline-block` so the absolute overlay positions against
   // the image bounding box, not the column.
-  const cardInner = (
+  const cardInner = service.cardKind === "najeon" ? (
+    <NajeonCard className="[--najeon-scale:0.592] sm:[--najeon-scale:0.683] md:[--najeon-scale:0.774] lg:[--najeon-scale:0.866]" />
+  ) : (
     <div className="relative inline-block">
       {service.cardSrc ? (
         // eslint-disable-next-line @next/next/no-img-element

@@ -48,6 +48,18 @@ export default async function HomePage({ params }: Props) {
         const services: ServiceItem[] = l === "ko"
           ? [
               {
+                id: "najeon",
+                cardKind: "najeon",
+                staticCard: true,
+                name: "나전",
+                statusLabel: "Coming Soon",
+                mainCopy: "사전? 뜻? 나의 것.",
+                supportCopy: "남이 정한 뜻에 머물지 마세요.\n직접 보고 겪은 것으로 다시 씁니다.\n그 말이 나의 것이 됩니다.",
+                avatarSrc: "/services/on_monkey.png",
+                avatarAlt: "ON",
+                href: `/${l}/works#najeon`,
+              },
+              {
                 id: "already-me",
                 cardSrc: ALREADY_ME_IMAGE_SRC,
                 staticCard: true,
@@ -76,6 +88,18 @@ export default async function HomePage({ params }: Props) {
               },
             ]
           : [
+              {
+                id: "najeon",
+                cardKind: "najeon",
+                staticCard: true,
+                name: "Najeon",
+                statusLabel: "Coming Soon",
+                mainCopy: "Dictionary? Definition? Mine.",
+                supportCopy: "Don't borrow someone else's meaning.\nWrite the word from what you've seen.\nThe word becomes yours.",
+                avatarSrc: "/services/on_monkey.png",
+                avatarAlt: "ON",
+                href: `/${l}/works#najeon`,
+              },
               {
                 id: "already-me",
                 cardSrc: ALREADY_ME_IMAGE_SRC,

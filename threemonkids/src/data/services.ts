@@ -1,4 +1,4 @@
-export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity" | "diary";
+export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity" | "diary" | "dictionary";
 
 export type ServiceStatus = "live" | "coming_soon" | "archived" | "draft";
 
@@ -20,6 +20,8 @@ export type Service = {
   status: ServiceStatus;
   categories: ServiceCategory[];
   cardSrc?: string;
+  /** Renders a live component instead of `cardSrc`. See NajeonCard / CLAUDE.md. */
+  cardKind?: "najeon";
   cardWidth?: number;
   cardHeight?: number;
   logoSrc?: string;
@@ -32,6 +34,23 @@ export type Service = {
 };
 
 export const SERVICES: Service[] = [
+  {
+    id: "najeon",
+    slug: "najeon",
+    name_ko: "나전",
+    name_en: "Najeon",
+    tagline_ko: "사전? 뜻? 나의 것.",
+    tagline_en: "Dictionary? Definition? Mine.",
+    description_ko:
+      "사전은 그 말이 [모두에게] 무엇인지 알려줍니다.\n나전은 그 말이 [나에게] 무엇인지 묻습니다.\n말을 찾고, 그 위에 직접 겪은 것으로 [덧씁니다].\n쓴 글은 [내 기기에만] 저장됩니다.",
+    description_en:
+      "A dictionary tells you what a word means to [everyone].\nNajeon asks what it means to [you].\nLook up a word, then [write over it] with your own experience.\nWhat you write stays [only on your device].",
+    status: "coming_soon",
+    categories: ["ios", "app", "dictionary"],
+    cardKind: "najeon",
+    avatarSrc: "/services/on_monkey.png",
+    media: [],
+  },
   {
     id: "already-me",
     slug: "already-me",

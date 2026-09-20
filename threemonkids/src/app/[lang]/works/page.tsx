@@ -1,10 +1,11 @@
-import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isValidLang } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { SERVICES } from "@/data/services";
+import { highlightBrackets } from "@/lib/utils/highlight";
 import { DownloadButton } from "@/components/public/DownloadButton";
+import NajeonCard from "@/components/public/NajeonCard";
 import type { Service, ServiceCategory, ServiceStatus } from "@/data/services";
 import type { Metadata } from "next";
 import type { Lang } from "@/types/i18n";
@@ -48,17 +49,6 @@ export default async function WorksPage({ params }: Props) {
   );
 }
 
-/* ── Inline highlight parser — [word] → <span class="text-white">word</span> ── */
-
-function highlightBrackets(text: string): React.ReactNode {
-  const parts = text.split(/\[([^\]]+)\]/);
-  return parts.map((part, i) =>
-    i % 2 === 1
-      ? <span key={i} className="text-white">{part}</span>
-      : part
-  );
-}
-
 /* ── ServiceSection ──────────────────────────────────────────────────────── */
 
 function ServiceSection({ service, lang }: { service: Service; lang: Lang }) {
@@ -74,7 +64,9 @@ function ServiceSection({ service, lang }: { service: Service; lang: Lang }) {
     >
       {/* Column 1: card */}
       <div className="md:w-[42%] shrink-0 flex items-start justify-center md:justify-end md:pr-16 lg:pr-20">
-        {service.cardSrc ? (
+        {service.cardKind === "najeon" ? (
+          <NajeonCard className="[--najeon-scale:0.698] md:[--najeon-scale:0.825]" />
+        ) : service.cardSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={service.cardSrc}
@@ -211,9 +203,10 @@ const CATEGORY_LABELS: Record<ServiceCategory, string> = {
   utility: "Utility",
   productivity: "Productivity",
   diary: "Diary",
+  dictionary: "Dictionary",
 };
 
-const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news", "diary"]);
+const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news", "diary", "dictionary"]);
 
 function CategoryTag({ category }: { category: ServiceCategory }) {
   const isWhite = WHITE_CATEGORIES.has(category);

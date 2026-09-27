@@ -147,32 +147,48 @@ DD/MM인지 MM/DD인지 알 수 없어 쓰지 않는다.
 
 ### Touch War 카드
 
-[TouchWarCard.tsx](src/components/public/TouchWarCard.tsx) + `public/services/touch_war_map.svg`.
+[TouchWarCard.tsx](src/components/public/TouchWarCard.tsx)
++ `public/services/touch_war_map.svg` + [touchWarArcs.ts](src/components/public/touchWarArcs.ts).
+**뒤의 둘은 생성물이다.** 고칠 곳은 [scripts/build-touchwar-map.py](scripts/build-touchwar-map.py).
 
 **왜 이미지가 아닌가** — 보여줄 것이 정지 화면이 아니라 움직임이기 때문이다. 앱의
-[DESIGN.md](file:///C:/Users/61478/ww/DESIGN.md)에 이렇게 적혀 있다: *"Live attacks: a dotted
-pencil curve draws itself from attacker to target and fades."* 카드는 이 연출을 그대로 재현한다.
+`ww/DESIGN.md`에 이렇게 적혀 있다: *"Live attacks: a dotted pencil curve draws itself from
+attacker to target and fades"*, *"grey flash, crack shoots out in 0.1s and fades after ~2.5s"*.
+카드는 이 두 문장을 그대로 재현한다. 카드에는 지도 말고 아무것도 없다 — 앱의 가로 모드처럼
+지도가 화면을 꽉 채운다.
 
-**지도는 앱의 데이터에서 생성한다.** `ww/src/map.json`은 이미 1000×520 캔버스로 투영돼 있고
-손그림 지터도 `scripts/build-map.mjs`에서 구워져 있다. 즉 이 카드의 지도는 **인게임 지도와 같은
-도형**이다. 생성기는 [scripts/build-touchwar-map.py](scripts/build-touchwar-map.py) —
-남극과 빈 태평양 여백을 잘라 `viewBox="120 8 810 430"`으로 크롭하고, 공격 곡선의 좌표까지 함께
-찍어준다. 앱 지도가 바뀌면 이 스크립트를 다시 돌릴 것. 출력은 115KB(gzip 42KB)라 정적 자산으로 두고
-`<img>`로 읽는다. 컴포넌트에 인라인하면 TSX가 10만 자가 된다.
+**모든 수치는 앱에서 가져왔다. 지어내지 말 것.**
 
-⚠️ **곡선 SVG와 지도 SVG의 `viewBox`가 같아야 한다.** 다르면 곡선이 엉뚱한 바다 위에 그려진다.
-`TouchWarCard`의 `VIEW_BOX` 상수와 생성기의 크롭 값이 짝이다.
+| 항목 | 출처 |
+|---|---|
+| 국가 도형, 중심점 | `ww/src/map.json` (투영·손그림 지터가 이미 구워진 데이터) |
+| 곡선 모양 | `ww/src/map.ts`의 `arcPoints()`, 휨 `LIVE.ARC_BOW` 0.22 |
+| 금 모양 | 같은 파일의 `crackPath()`를 그대로 옮김 |
+| 타이밍 | `ww/src/live.ts` `DRAW_MS` 400 · `ARC_MS` 1300, `WorldMap.tsx` `CRACK_MS` 2600(1.6초 유지 후 1초 페이드) · 플래시 450ms · 금 확장 100ms |
+| 색 | `DESIGN.md`의 ink `#000000`, flash `#BDBDBD` |
 
-**타이밍과 모양은 `ww/src/live.ts`의 `LIVE` 상수에서 가져왔다** — 그리기 400ms, 유지 1300ms,
-페이드 500ms, 곡선 휨(`ARC_BOW`) 0.22, 점선 3px/5px, 투명도 0.55. 앱 값이 바뀌면 같이 맞출 것.
+CSS 키프레임은 이 값들을 **4.8초 주기에 대한 비율**로 옮긴 것이다(곡선 그리기 400ms = 8.3%).
+주기나 앱 상수를 바꾸면 퍼센트를 다시 계산할 것.
+
+⚠️ **지도가 세로로 크롭돼 있다.** 1000×520 세계지도는 2:1이라 315×439 카드에 통째로 안 들어간다.
+꽉 채우려면 잘라야 하고, 그래서 유럽·아프리카·중동·서아시아만 보인다(`viewBox="455 50 251.1 350"`).
+후보 크롭을 렌더해 비교하고 고른 값이다. **곡선 SVG와 지도 SVG의 viewBox가 같아야 한다** —
+다르면 곡선이 엉뚱한 바다 위에 그려진다. 생성기가 곡선이 크롭을 벗어나면 에러를 내고 멈춘다.
 
 **점선이면서 그려지는 효과는 마스크로 낸다.** 한 path에 `stroke-dasharray`를 점선용과
-그리기용으로 동시에 쓸 수 없다. 그래서 점선 곡선을 굵은 흰 선 마스크로 덮고, 마스크 쪽의
+그리기용으로 동시에 쓸 수 없다. 점선 곡선을 굵은 흰 선 마스크로 덮고 마스크 쪽
 `stroke-dashoffset`을 0으로 보내 드러낸다. CSS에서 `stroke-dashoffset`은 길이를 요구하므로
 `calc(var(--len) * 1px)`로 단위를 붙인다(맨 숫자는 브라우저별로 갈린다).
 
-**글꼴은 Patrick Hand** — 앱과 같은 서체. 라틴 전용이라 가볍지만 `preload: false`로 둔다.
-앱의 플래그 아이콘은 이 앱의 유일한 색인데 카드는 흑백을 유지하므로, 플래그 대신 국가 코드를 쓴다.
+금은 원점 기준으로 생성해 `translate`로 옮긴 뒤 `transform-box: fill-box` + `transform-origin: center`로
+확장시키고, 타깃 국가 모양으로 `clipPath`를 걸어 국경 밖으로 새지 않게 한다(앱과 같다).
+
+지도 SVG는 67KB(gzip 약 25KB)라 정적 자산으로 두고 `<img>`로 읽는다. 컴포넌트에 인라인하면
+TSX가 감당이 안 된다. 곡선·금·타깃 도형만 TS로 생성해 인라인한다(7KB).
+
+앱은 Patrick Hand를 쓰지만 카드에 글자가 없어서 웹폰트는 싣지 않는다. 글자를 다시 넣게 되면
+`next/font`의 `Patrick_Hand`를 `preload: false`로 추가할 것.
+
 
 ### 나전 카드만 이미지가 아니라 컴포넌트다
 

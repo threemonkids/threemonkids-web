@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Nanum_Myeongjo, Patrick_Hand } from "next/font/google";
+import { Geist, Geist_Mono, Nanum_Myeongjo } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,15 +20,6 @@ const nanumMyeongjo = Nanum_Myeongjo({
   // `subsets` is deliberately omitted: next/font's metadata for this family lists
   // only "latin", and naming subsets would drop the hangul ranges. Omitting it
   // (legal because preload is off) pulls every unicode-range the family ships.
-  preload: false,
-  display: "swap",
-});
-
-// Used only by the Touch War service card, matching the app's own typeface.
-const patrickHand = Patrick_Hand({
-  variable: "--font-patrick-hand",
-  weight: "400",
-  subsets: ["latin"],
   preload: false,
   display: "swap",
 });
@@ -55,7 +46,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${nanumMyeongjo.variable} ${patrickHand.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${nanumMyeongjo.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
       </body>

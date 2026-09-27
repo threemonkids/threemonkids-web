@@ -205,36 +205,38 @@ body {
 }
 
 /* ── Touch War — service card built as a component, not an image ─────────── */
-/* Base state is the in-game world map (generated from the app's own map.json).
-   On hover the app's live-attack display is reproduced: a dotted pencil curve
-   draws itself from attacker to target, holds, then fades, one after another,
-   looping. Timings mirror ww/src/live.ts — DRAW_MS 400, ARC_MS 1300, 500ms fade.
+/* The whole card is the in-game world map (generated from the app's own
+   map.json). On hover the app's live-attack display plays: a dotted pencil curve
+   draws itself from attacker to target, the country flashes grey, a crack shoots
+   out of the point of impact and fades. One attack starts every 0.9s, looping.
+
+   Every timing below comes from the app — ww/src/live.ts (DRAW_MS 400,
+   ARC_MS 1300) and WorldMap.tsx (CRACK_MS 2600 = 1.6s held then 1s fade,
+   450ms flash, 100ms crack grow) — expressed as a share of the 4.8s cycle.
    On touch, TouchWarCard adds .touchwar-card--played once it scrolls into view. */
 
 .touchwar-card {
   --touchwar-scale: 1;
-  --touchwar-paper:    #FFFFFF;
-  --touchwar-ink:      #000000;
-  --touchwar-graphite: #7A7A7A;
-
   width: calc(315px * var(--touchwar-scale));
   height: calc(439px * var(--touchwar-scale));
   flex: none;
 }
 
 .touchwar-card-inner {
+  position: relative;
   width: 315px;
   height: 439px;
   transform: scale(var(--touchwar-scale));
   transform-origin: top left;
-  background: var(--touchwar-paper);
-  color: var(--touchwar-ink);
-  font-family: var(--font-patrick-hand), "Patrick Hand", "Comic Sans MS", cursive;
+  background: #ffffff;
   border-radius: 2px;
+  overflow: hidden;
 }
 
-/* One attack: 4.8s round trip, each curve starting 0.9s after the one before. */
-.touchwar-arc {
+/* Nothing plays until the card is hovered or has been scrolled into view. */
+.touchwar-arc,
+.touchwar-flash,
+.touchwar-crack {
   opacity: 0;
 }
 
@@ -244,10 +246,10 @@ body {
   stroke-dashoffset: calc(var(--len) * 1px);
 }
 
-.touchwar-card:hover .touchwar-arc,
-.touchwar-card--played .touchwar-arc {
-  animation: touchwarArcLife 4.8s linear infinite;
-  animation-delay: calc(var(--i) * 0.9s);
+.touchwar-crack {
+  transform: scale(0.05);
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .touchwar-card:hover .touchwar-arc-draw,
@@ -256,28 +258,71 @@ body {
   animation-delay: calc(var(--i) * 0.9s);
 }
 
+.touchwar-card:hover .touchwar-arc,
+.touchwar-card--played .touchwar-arc {
+  animation: touchwarArcLife 4.8s linear infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+
+.touchwar-card:hover .touchwar-flash,
+.touchwar-card--played .touchwar-flash {
+  animation: touchwarFlash 4.8s linear infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+
+.touchwar-card:hover .touchwar-crack,
+.touchwar-card--played .touchwar-crack {
+  animation: touchwarCrack 4.8s linear infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+
+/* 0 – 8.3% = the 400ms the curve takes to draw itself. Everything else keys
+   off that landing moment. */
 @keyframes touchwarArcDraw {
-  0%    { stroke-dashoffset: calc(var(--len) * 1px); animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
-  8.3%  { stroke-dashoffset: 0; }
-  100%  { stroke-dashoffset: 0; }
+  0%   { stroke-dashoffset: calc(var(--len) * 1px); animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
+  8.3% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; }
 }
 
 @keyframes touchwarArcLife {
-  0%    { opacity: 0.55; }
-  27%   { opacity: 0.55; }
-  37.5% { opacity: 0; }
-  100%  { opacity: 0; }
+  0%, 27%     { opacity: 1; }
+  37.5%, 100% { opacity: 0; }
+}
+
+@keyframes touchwarFlash {
+  0%, 8.2%    { opacity: 0; }
+  8.3%        { opacity: 1; }
+  17.7%, 100% { opacity: 0; }
+}
+
+@keyframes touchwarCrack {
+  0%, 8.2%    { opacity: 0; transform: scale(0.05); }
+  8.3%        { opacity: 1; transform: scale(0.05); animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
+  10.4%       { opacity: 1; transform: scale(1); }
+  41.6%       { opacity: 1; transform: scale(1); }
+  62.4%, 100% { opacity: 0; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .touchwar-card:hover .touchwar-arc,
-  .touchwar-card--played .touchwar-arc {
-    animation: none;
-    opacity: 0.55;
-  }
   .touchwar-card:hover .touchwar-arc-draw,
   .touchwar-card--played .touchwar-arc-draw {
     animation: none;
     stroke-dashoffset: 0;
+  }
+  .touchwar-card:hover .touchwar-arc,
+  .touchwar-card--played .touchwar-arc,
+  .touchwar-card:hover .touchwar-crack,
+  .touchwar-card--played .touchwar-crack {
+    animation: none;
+    opacity: 1;
+  }
+  .touchwar-card:hover .touchwar-crack,
+  .touchwar-card--played .touchwar-crack {
+    transform: scale(1);
+  }
+  .touchwar-card:hover .touchwar-flash,
+  .touchwar-card--played .touchwar-flash {
+    animation: none;
+    opacity: 0;
   }
 }

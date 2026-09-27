@@ -74,12 +74,17 @@ const INTRO_BY_SLUG: Record<string, Record<Lang, string>> = {
     ko: "나전은 이용자의 어떤 개인정보도 수집하지 않습니다.",
     en: "Najeon does not collect any personal information.",
   },
+  "touch-war": {
+    ko: "Touch War는 게임을 진행하는 데 필요한 최소한의 정보만 저장합니다.",
+    en: "Touch War stores only the minimum needed to run the game.",
+  },
 };
 
 // Services with their own policy also carry their own date; the rest use the
 // project-wide default in StaticLegalLayout.
 const UPDATED_DATE_BY_SLUG: Record<string, string> = {
   najeon: "2026.09.20",
+  "touch-war": "2026.09.25",
 };
 
 const SECTIONS_BY_SLUG: Record<string, Record<Lang, Section[]>> = {
@@ -165,6 +170,96 @@ const SECTIONS_BY_SLUG: Record<string, Record<Lang, Section[]>> = {
       },
       {
         heading: "6. Contact",
+        items: ["threemonkids@gmail.com"],
+      },
+    ],
+  },
+  "touch-war": {
+    ko: [
+      {
+        heading: "1. 수집하는 정보",
+        items: [
+          "익명 로그인으로 자동 생성되는 기기별 식별자",
+          "이용자가 선택한 국가 코드",
+          "공격 기록 — 어느 나라가 어느 나라를 공격했는지",
+        ],
+      },
+      {
+        heading: "2. 수집하지 않는 정보",
+        items: [
+          "이름, 이메일, 전화번호 등 개인을 식별할 수 있는 정보",
+          "위치 정보",
+          "광고 식별자",
+        ],
+      },
+      {
+        heading: "3. 사용 목적",
+        items: [
+          "국가별 공격 현황을 집계하고 게임을 진행하기 위해 사용합니다.",
+          "이 외의 목적으로는 사용하지 않습니다.",
+        ],
+      },
+      {
+        heading: "4. 저장 위치",
+        items: ["수집된 정보는 Supabase 서버(호주 시드니 리전)에 저장됩니다."],
+      },
+      {
+        heading: "5. 제3자 제공",
+        items: ["이용자의 정보를 제3자에게 판매하거나 제공하지 않습니다."],
+      },
+      {
+        heading: "6. 데이터 보관 및 삭제",
+        items: [
+          "앱 설정 화면에서 직접 데이터를 삭제할 수 있습니다.",
+          "앱을 삭제하면 기기의 익명 식별자가 사라져 이전 기록과 이어지지 않습니다.",
+        ],
+      },
+      {
+        heading: "7. 문의",
+        items: ["threemonkids@gmail.com"],
+      },
+    ],
+    en: [
+      {
+        heading: "1. Information We Collect",
+        items: [
+          "A per-device identifier created automatically by anonymous sign-in",
+          "The country code you select",
+          "Attack records — which country attacked which",
+        ],
+      },
+      {
+        heading: "2. What We Do Not Collect",
+        items: [
+          "Personally identifying information such as your name, email address or phone number",
+          "Location data",
+          "Advertising identifiers",
+        ],
+      },
+      {
+        heading: "3. How We Use Information",
+        items: [
+          "To tally attacks by country and run the game.",
+          "We use it for nothing else.",
+        ],
+      },
+      {
+        heading: "4. Where It Is Stored",
+        items: ["Collected information is stored on Supabase servers in the Sydney, Australia region."],
+      },
+      {
+        heading: "5. Third-Party Sharing",
+        items: ["We do not sell or share your information with third parties."],
+      },
+      {
+        heading: "6. Data Retention and Deletion",
+        items: [
+          "You can delete your data yourself from the app's settings screen.",
+          "Deleting the app discards the anonymous identifier on your device, breaking the link to your earlier record.",
+        ],
+      },
+      {
+        heading: "7. Contact",
         items: ["threemonkids@gmail.com"],
       },
     ],

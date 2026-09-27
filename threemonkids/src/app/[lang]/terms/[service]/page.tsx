@@ -72,12 +72,17 @@ const INTRO_BY_SLUG: Record<string, Record<Lang, string>> = {
     ko: "나전은 Three Monkids에서 제공하며, 계정과 서버 없이 기기에서만 동작합니다.",
     en: "Najeon is provided by Three Monkids and runs entirely on your device, with no account and no server.",
   },
+  "touch-war": {
+    ko: "Touch War는 Three Monkids에서 제공하는 게임이며, 회원가입 없이 이용합니다.",
+    en: "Touch War is a game provided by Three Monkids and is played without signing up.",
+  },
 };
 
 // Services with their own terms also carry their own date; the rest use the
 // project-wide default in StaticLegalLayout.
 const UPDATED_DATE_BY_SLUG: Record<string, string> = {
   najeon: "2026.09.20",
+  "touch-war": "2026.09.25",
 };
 
 const SECTIONS_BY_SLUG: Record<string, Record<Lang, Section[]>> = {
@@ -167,6 +172,102 @@ const SECTIONS_BY_SLUG: Record<string, Record<Lang, Section[]>> = {
       },
       {
         heading: "7. Contact",
+        items: ["threemonkids@gmail.com"],
+      },
+    ],
+  },
+  "touch-war": {
+    ko: [
+      {
+        heading: "1. 서비스 이용",
+        items: [
+          "회원가입 없이 이용할 수 있습니다.",
+          "앱을 실행하면 기기별 익명 식별자가 자동으로 만들어집니다.",
+        ],
+      },
+      {
+        heading: "2. 기록의 보관",
+        items: [
+          "익명 식별자는 기기에 묶여 있습니다.",
+          "앱 삭제, 기기 변경 또는 초기화 시 이전 기록을 이어받을 수 없으며, 복구 수단을 제공하지 않습니다.",
+        ],
+      },
+      {
+        heading: "3. 금지 사항",
+        items: [
+          "비정상적인 방법으로 공격 수치를 조작하는 행위는 금지됩니다.",
+          "자동화 도구로 서버에 과도한 요청을 보내는 행위는 금지됩니다.",
+        ],
+      },
+      {
+        heading: "4. 게임 내용에 관하여",
+        items: [
+          "게임에 등장하는 국가와 공격은 오락을 위한 설정입니다.",
+          "특정 국가나 집단에 대한 Three Monkids의 입장을 나타내지 않습니다.",
+        ],
+      },
+      {
+        heading: "5. 서비스 제공",
+        items: ["서버 점검이나 운영상의 사정에 따라 서비스가 일시 중단될 수 있습니다."],
+      },
+      {
+        heading: "6. 책임 제한",
+        items: ["제공되는 정보는 참고용이며, 최종 판단은 사용자에게 있습니다."],
+      },
+      {
+        heading: "7. 정책 변경",
+        items: ["본 약관은 변경될 수 있습니다."],
+      },
+      {
+        heading: "8. 문의",
+        items: ["threemonkids@gmail.com"],
+      },
+    ],
+    en: [
+      {
+        heading: "1. Use of Service",
+        items: [
+          "The game can be played without signing up.",
+          "Launching the app creates an anonymous per-device identifier.",
+        ],
+      },
+      {
+        heading: "2. Your Record",
+        items: [
+          "The anonymous identifier is tied to your device.",
+          "If you delete the app, change devices or reset one, your earlier record cannot be carried over, and we provide no way to recover it.",
+        ],
+      },
+      {
+        heading: "3. Prohibited Conduct",
+        items: [
+          "Manipulating attack counts by illegitimate means is prohibited.",
+          "Sending excessive requests to the server with automated tools is prohibited.",
+        ],
+      },
+      {
+        heading: "4. About the Game's Content",
+        items: [
+          "The countries and attacks in the game are a fiction made for play.",
+          "They do not represent any position of Three Monkids toward any country or group.",
+        ],
+      },
+      {
+        heading: "5. Availability",
+        items: ["The service may be interrupted for maintenance or other operational reasons."],
+      },
+      {
+        heading: "6. Limitation of Liability",
+        items: [
+          "The information provided is for reference only, and final judgment remains with the user.",
+        ],
+      },
+      {
+        heading: "7. Policy Changes",
+        items: ["These terms may be updated from time to time."],
+      },
+      {
+        heading: "8. Contact",
         items: ["threemonkids@gmail.com"],
       },
     ],

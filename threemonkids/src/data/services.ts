@@ -1,4 +1,4 @@
-export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity" | "diary" | "dictionary";
+export type ServiceCategory = "ios" | "android" | "web" | "desktop" | "app" | "news" | "utility" | "productivity" | "diary" | "dictionary" | "game";
 
 export type ServiceStatus = "live" | "coming_soon" | "archived" | "draft";
 
@@ -21,7 +21,7 @@ export type Service = {
   categories: ServiceCategory[];
   cardSrc?: string;
   /** Renders a live component instead of `cardSrc`. See NajeonCard / CLAUDE.md. */
-  cardKind?: "najeon";
+  cardKind?: "najeon" | "touch-war";
   cardWidth?: number;
   cardHeight?: number;
   logoSrc?: string;
@@ -45,10 +45,12 @@ export const SERVICES: Service[] = [
       "사전은 그 말이 [모두에게] 무엇인지 알려줍니다.\n나전은 그 말이 [나에게] 무엇인지 묻습니다.\n말을 찾고, 그 위에 직접 겪은 것으로 [덧씁니다].\n쓴 글은 [내 기기에만] 저장됩니다.",
     description_en:
       "A dictionary tells you what a word means to [everyone].\nNajeon asks what it means to [you].\nLook up a word, then [write over it] with your own experience.\nWhat you write stays [only on your device].",
-    status: "coming_soon",
+    status: "live",
     categories: ["ios", "app", "dictionary"],
     cardKind: "najeon",
     avatarSrc: "/services/on_monkey.png",
+    downloadUrl: "https://apps.apple.com/us/app/나전/id6814106977",
+    qrCodeSrc: "/services/najeon_qr.svg",
     media: [],
   },
   {
@@ -68,6 +70,23 @@ export const SERVICES: Service[] = [
     avatarSrc: "/services/on_monkey.png",
     downloadUrl: "https://apps.apple.com/au/app/already-me/id6766051614",
     qrCodeSrc: "/services/already_me_qr.png",
+    media: [],
+  },
+  {
+    id: "touch-war",
+    slug: "touch-war",
+    name_ko: "Touch War",
+    name_en: "Touch War",
+    tagline_ko: "지도? 터치? 전쟁.",
+    tagline_en: "Map? Touch? War.",
+    description_ko:
+      "세계지도 위에서 나라를 [터치]하면 공격이 됩니다.\n처음에 고른 나라가 [나의 편]이 됩니다.\n누가 누구를 쳤는지 [실시간]으로 쌓입니다.\n[국가 대항전]입니다.",
+    description_en:
+      "[Touch] a country on the world map to attack it.\nThe country you pick first becomes [your side].\nEvery attack is recorded [in real time].\nIt is a [war between nations].",
+    status: "coming_soon",
+    categories: ["ios", "app", "game"],
+    cardKind: "touch-war",
+    avatarSrc: "/services/on_monkey.png",
     media: [],
   },
   {

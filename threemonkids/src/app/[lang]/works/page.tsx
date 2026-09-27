@@ -6,6 +6,7 @@ import { SERVICES } from "@/data/services";
 import { highlightBrackets } from "@/lib/utils/highlight";
 import { DownloadButton } from "@/components/public/DownloadButton";
 import NajeonCard from "@/components/public/NajeonCard";
+import TouchWarCard from "@/components/public/TouchWarCard";
 import type { Service, ServiceCategory, ServiceStatus } from "@/data/services";
 import type { Metadata } from "next";
 import type { Lang } from "@/types/i18n";
@@ -66,6 +67,8 @@ function ServiceSection({ service, lang }: { service: Service; lang: Lang }) {
       <div className="md:w-[42%] shrink-0 flex items-start justify-center md:justify-end md:pr-16 lg:pr-20">
         {service.cardKind === "najeon" ? (
           <NajeonCard className="[--najeon-scale:0.698] md:[--najeon-scale:0.825]" />
+        ) : service.cardKind === "touch-war" ? (
+          <TouchWarCard className="[--touchwar-scale:0.698] md:[--touchwar-scale:0.825]" />
         ) : service.cardSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -204,9 +207,10 @@ const CATEGORY_LABELS: Record<ServiceCategory, string> = {
   productivity: "Productivity",
   diary: "Diary",
   dictionary: "Dictionary",
+  game: "Game",
 };
 
-const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news", "diary", "dictionary"]);
+const WHITE_CATEGORIES = new Set<ServiceCategory>(["ios", "app", "news", "diary", "dictionary", "game"]);
 
 function CategoryTag({ category }: { category: ServiceCategory }) {
   const isWhite = WHITE_CATEGORIES.has(category);

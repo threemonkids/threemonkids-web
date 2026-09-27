@@ -98,9 +98,22 @@ const sections = SECTIONS_BY_SLUG[slug]?.[lang] ?? DEFAULT_SECTIONS[lang];
 | perfact | intro만 | 공용 | 공용 |
 | already-me | intro + 날짜 | 공용 | 공용 |
 | najeon | 전용 | **전용** | **전용** |
+| touch-war | 전용 | **전용** | **전용** |
 
-나전은 계정·서버·분석이 없는 온디바이스 앱이라 공용 문구(회원가입 이메일 수집, 서버 운영 전제)가
-사실과 맞지 않아 privacy/terms를 따로 썼다. 같은 성격의 앱을 추가하면 나전 쪽을 복사해 시작할 것.
+나전은 계정·서버가 없는 온디바이스 앱이라 공용 문구(회원가입 이메일 수집, 서버 운영 전제)가
+사실과 맞지 않아 privacy/terms를 따로 썼다. Touch War는 반대로 **서버가 있는 쪽**이라 또 다르다 —
+익명 로그인 식별자·국가 코드·공격 기록을 Supabase(호주 시드니 리전)에 저장하므로, 수집 항목과
+저장 위치를 명시한 전용 문구를 쓴다. 새 앱을 추가할 때 **온디바이스면 나전, 서버가 붙으면
+Touch War 쪽을 복사해 시작할 것.**
+
+⚠️ **익명 로그인 서비스의 데이터 삭제는 "이메일로 요청"이 아니라 "앱 안에서 직접"이어야 한다.**
+이용자를 식별할 수단이 없으니 메일을 받아도 누구 기록인지 찾을 수 없다. 지킬 수 없는 약속이므로
+Touch War privacy/support는 앱 설정 화면에서의 직접 삭제를 안내하고, 이메일은 일반 문의용으로만 둔다.
+
+Touch War 약관에는 다른 서비스에 없는 조항이 둘 있다. 의도적이니 지우지 말 것:
+`2. 기록의 보관`(익명 식별자는 기기에 묶여 있고 복구 수단이 없다)과
+`4. 게임 내용에 관하여`(등장 국가와 공격은 오락을 위한 설정이며 Three Monkids의 입장이 아니다).
+국가를 공격하는 게임이라는 소재상 후자는 빼지 않는 편이 안전하다.
 
 `UPDATED_DATE_BY_SLUG`는 전용 문구를 쓰는 서비스만 채운다. 비워두면
 `StaticLegalLayout`의 프로젝트 기본 날짜가 나가므로, 문구를 고쳤으면 날짜도 같이 고칠 것.
@@ -117,8 +130,49 @@ DD/MM인지 MM/DD인지 알 수 없어 쓰지 않는다.
 - `cardKind` — 이미지 대신 전용 컴포넌트를 그린다. 현재 `"najeon"` 하나뿐. 아래 참고.
 - `avatarSrc` — 제작자 아바타, 보통 `/services/on_monkey.png`
 - `qrCodeSrc` — 있을 때만 데스크톱에서 다운로드 버튼 아래 표시. 미출시면 필드 생략.
+  앱을 출시하면 `downloadUrl`과 함께 채운다. QR은 파이썬 `segno`로 만든 흑백 SVG다
+  (`najeon_qr.svg`). 표시 슬롯이 80px로 작아서 **quiet zone을 규격의 4모듈이 아니라 2모듈로**
+  줄였다 — 렌더 컨테이너의 `bg-white p-1` 여백이 나머지 여백 역할을 하고, 그러지 않으면
+  모듈이 너무 조밀해져 인식률이 떨어진다. URL의 한글은 퍼센트 인코딩해서 넣는다
+  (스캐너의 문자셋 추측 여지를 없애기 위함).
 - `downloadUrl` — 없으면 [DownloadButton](src/components/public/DownloadButton.tsx)이
   "앱 출시 준비 중입니다" 토스트로 동작. 미출시면 필드 생략.
+
+### 컴포넌트 카드 — 나전, Touch War
+
+두 서비스는 `cardSrc`(PNG) 대신 `cardKind`를 주면 전용 컴포넌트가 렌더된다.
+공통 규칙: **315×439 고정 크기로 그린 뒤 `--<name>-scale`로 슬롯에 맞춰 축소**하고,
+포인터 기기는 `:hover`, 터치는 IntersectionObserver로 1회 자동 재생한다.
+두 카드가 같은 래퍼 CSS를 복사해 쓰고 있다 — 세 번째 카드가 생기면 그때 공통 클래스로 빼면 된다.
+
+### Touch War 카드
+
+[TouchWarCard.tsx](src/components/public/TouchWarCard.tsx) + `public/services/touch_war_map.svg`.
+
+**왜 이미지가 아닌가** — 보여줄 것이 정지 화면이 아니라 움직임이기 때문이다. 앱의
+[DESIGN.md](file:///C:/Users/61478/ww/DESIGN.md)에 이렇게 적혀 있다: *"Live attacks: a dotted
+pencil curve draws itself from attacker to target and fades."* 카드는 이 연출을 그대로 재현한다.
+
+**지도는 앱의 데이터에서 생성한다.** `ww/src/map.json`은 이미 1000×520 캔버스로 투영돼 있고
+손그림 지터도 `scripts/build-map.mjs`에서 구워져 있다. 즉 이 카드의 지도는 **인게임 지도와 같은
+도형**이다. 생성기는 [scripts/build-touchwar-map.py](scripts/build-touchwar-map.py) —
+남극과 빈 태평양 여백을 잘라 `viewBox="120 8 810 430"`으로 크롭하고, 공격 곡선의 좌표까지 함께
+찍어준다. 앱 지도가 바뀌면 이 스크립트를 다시 돌릴 것. 출력은 115KB(gzip 42KB)라 정적 자산으로 두고
+`<img>`로 읽는다. 컴포넌트에 인라인하면 TSX가 10만 자가 된다.
+
+⚠️ **곡선 SVG와 지도 SVG의 `viewBox`가 같아야 한다.** 다르면 곡선이 엉뚱한 바다 위에 그려진다.
+`TouchWarCard`의 `VIEW_BOX` 상수와 생성기의 크롭 값이 짝이다.
+
+**타이밍과 모양은 `ww/src/live.ts`의 `LIVE` 상수에서 가져왔다** — 그리기 400ms, 유지 1300ms,
+페이드 500ms, 곡선 휨(`ARC_BOW`) 0.22, 점선 3px/5px, 투명도 0.55. 앱 값이 바뀌면 같이 맞출 것.
+
+**점선이면서 그려지는 효과는 마스크로 낸다.** 한 path에 `stroke-dasharray`를 점선용과
+그리기용으로 동시에 쓸 수 없다. 그래서 점선 곡선을 굵은 흰 선 마스크로 덮고, 마스크 쪽의
+`stroke-dashoffset`을 0으로 보내 드러낸다. CSS에서 `stroke-dashoffset`은 길이를 요구하므로
+`calc(var(--len) * 1px)`로 단위를 붙인다(맨 숫자는 브라우저별로 갈린다).
+
+**글꼴은 Patrick Hand** — 앱과 같은 서체. 라틴 전용이라 가볍지만 `preload: false`로 둔다.
+앱의 플래그 아이콘은 이 앱의 유일한 색인데 카드는 흑백을 유지하므로, 플래그 대신 국가 코드를 쓴다.
 
 ### 나전 카드만 이미지가 아니라 컴포넌트다
 

@@ -203,3 +203,81 @@ body {
     transition-delay: 0ms;
   }
 }
+
+/* ── Touch War — service card built as a component, not an image ─────────── */
+/* Base state is the in-game world map (generated from the app's own map.json).
+   On hover the app's live-attack display is reproduced: a dotted pencil curve
+   draws itself from attacker to target, holds, then fades, one after another,
+   looping. Timings mirror ww/src/live.ts — DRAW_MS 400, ARC_MS 1300, 500ms fade.
+   On touch, TouchWarCard adds .touchwar-card--played once it scrolls into view. */
+
+.touchwar-card {
+  --touchwar-scale: 1;
+  --touchwar-paper:    #FFFFFF;
+  --touchwar-ink:      #000000;
+  --touchwar-graphite: #7A7A7A;
+
+  width: calc(315px * var(--touchwar-scale));
+  height: calc(439px * var(--touchwar-scale));
+  flex: none;
+}
+
+.touchwar-card-inner {
+  width: 315px;
+  height: 439px;
+  transform: scale(var(--touchwar-scale));
+  transform-origin: top left;
+  background: var(--touchwar-paper);
+  color: var(--touchwar-ink);
+  font-family: var(--font-patrick-hand), "Patrick Hand", "Comic Sans MS", cursive;
+  border-radius: 2px;
+}
+
+/* One attack: 4.8s round trip, each curve starting 0.9s after the one before. */
+.touchwar-arc {
+  opacity: 0;
+}
+
+.touchwar-arc-draw {
+  /* `* 1px` rather than a bare number: in CSS (unlike the presentation
+     attribute) stroke-dashoffset wants a length, and px maps to user units. */
+  stroke-dashoffset: calc(var(--len) * 1px);
+}
+
+.touchwar-card:hover .touchwar-arc,
+.touchwar-card--played .touchwar-arc {
+  animation: touchwarArcLife 4.8s linear infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+
+.touchwar-card:hover .touchwar-arc-draw,
+.touchwar-card--played .touchwar-arc-draw {
+  animation: touchwarArcDraw 4.8s linear infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+
+@keyframes touchwarArcDraw {
+  0%    { stroke-dashoffset: calc(var(--len) * 1px); animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); }
+  8.3%  { stroke-dashoffset: 0; }
+  100%  { stroke-dashoffset: 0; }
+}
+
+@keyframes touchwarArcLife {
+  0%    { opacity: 0.55; }
+  27%   { opacity: 0.55; }
+  37.5% { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .touchwar-card:hover .touchwar-arc,
+  .touchwar-card--played .touchwar-arc {
+    animation: none;
+    opacity: 0.55;
+  }
+  .touchwar-card:hover .touchwar-arc-draw,
+  .touchwar-card--played .touchwar-arc-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

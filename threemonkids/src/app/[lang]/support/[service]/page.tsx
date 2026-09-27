@@ -23,12 +23,17 @@ const INTRO_BY_SLUG: Record<string, { ko: string; en: string }> = {
     ko: "나전은 사전의 뜻을 나의 언어로 다시 쓰는 앱입니다.",
     en: "Najeon lets you rewrite dictionary definitions in your own words.",
   },
+  "touch-war": {
+    ko: "Touch War는 세계지도에서 나라를 터치해 공격하는 국가 대항 게임입니다.",
+    en: "Touch War is a nation-versus-nation game where you attack countries by touching them on a world map.",
+  },
 };
 
 // Per-service "Last updated" overrides. PerFact uses the default in StaticLegalLayout.
 const UPDATED_DATE_BY_SLUG: Record<string, string> = {
   "already-me": "2026.05.03",
   najeon: "2026.09.20",
+  "touch-war": "2026.09.25",
 };
 
 // Shared support copy — used by any service without its own entry below.
@@ -112,6 +117,68 @@ const SECTIONS_BY_SLUG: Record<string, Record<Lang, Section[]>> = {
           "Words not listed in the dictionary have no definition to show.",
           "You can still keep the word and write your own definition for it.",
         ],
+      },
+      {
+        heading: "Email",
+        items: ["threemonkids@gmail.com"],
+      },
+      {
+        heading: "If possible, please include:",
+        items: ["Your device", "App version", "A description of the issue"],
+      },
+    ],
+  },
+  "touch-war": {
+    ko: [
+      {
+        heading: "Touch War는 어떤 게임인가요?",
+        items: [
+          "세계지도에서 다른 나라를 터치하면 그 나라를 공격합니다.",
+          "처음 실행할 때 고른 나라가 나의 편이 되고, 모든 공격 기록이 함께 쌓입니다.",
+        ],
+      },
+      {
+        heading: "계정은 어떻게 되나요?",
+        items: [
+          "회원가입이 없습니다. 앱을 실행하면 기기별 익명 식별자가 자동으로 만들어집니다.",
+          "이름이나 이메일을 입력받지 않습니다.",
+          "앱 설정 화면에서 내 기록을 직접 삭제할 수 있습니다.",
+          "앱을 삭제하거나 기기를 바꾸면 이전 기록과 이어지지 않습니다.",
+        ],
+      },
+      {
+        heading: "출시 일정",
+        items: ["현재 App Store 심사 전이며, 준비가 끝나는 대로 공개됩니다."],
+      },
+      {
+        heading: "이메일 문의",
+        items: ["threemonkids@gmail.com"],
+      },
+      {
+        heading: "문의 시 아래 정보를 함께 보내주시면 도움이 됩니다.",
+        items: ["사용 중인 기기", "앱 버전", "발생한 문제 내용"],
+      },
+    ],
+    en: [
+      {
+        heading: "What is Touch War?",
+        items: [
+          "Touching another country on the world map attacks it.",
+          "The country you pick on first launch becomes your side, and every attack is recorded against it.",
+        ],
+      },
+      {
+        heading: "How do accounts work?",
+        items: [
+          "There is no sign-up. Launching the app creates an anonymous per-device identifier.",
+          "We never ask for your name or email address.",
+          "You can delete your own record from the app's settings screen.",
+          "Deleting the app or switching devices breaks the link to your earlier record.",
+        ],
+      },
+      {
+        heading: "Release",
+        items: ["The app has not yet been submitted for App Store review. It ships once it is ready."],
       },
       {
         heading: "Email",

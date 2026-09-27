@@ -1,11 +1,12 @@
 import Link from "next/link";
 import NajeonCard from "@/components/public/NajeonCard";
+import TouchWarCard from "@/components/public/TouchWarCard";
 
 export type ServiceItem = {
   id: string;
   cardSrc?: string;
   /** Renders a live component instead of `cardSrc`. See NajeonCard / CLAUDE.md. */
-  cardKind?: "najeon";
+  cardKind?: "najeon" | "touch-war";
   cardWidth?: number;
   cardHeight?: number;
   name: string;
@@ -40,6 +41,8 @@ function ServiceRow({ service }: { service: ServiceItem }) {
   // the image bounding box, not the column.
   const cardInner = service.cardKind === "najeon" ? (
     <NajeonCard className="[--najeon-scale:0.592] sm:[--najeon-scale:0.683] md:[--najeon-scale:0.774] lg:[--najeon-scale:0.866]" />
+  ) : service.cardKind === "touch-war" ? (
+    <TouchWarCard className="[--touchwar-scale:0.592] sm:[--touchwar-scale:0.683] md:[--touchwar-scale:0.774] lg:[--touchwar-scale:0.866]" />
   ) : (
     <div className="relative inline-block">
       {service.cardSrc ? (
